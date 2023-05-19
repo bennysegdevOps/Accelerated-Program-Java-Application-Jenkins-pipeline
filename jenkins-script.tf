@@ -22,7 +22,7 @@ sudo usermod -aG docker jenkins
 sudo usermod -aG docker ec2-user
 sudo chmod 777 /var/run/docker.sock
 sudo service sshd restart
-echo "license_key: c605530d3bdfc50e00542ec7f199be7efebaNRAL" | sudo tee -a /etc/newrelic-infra.yml
+echo "license_key: ${var.nr_license_key}" | sudo tee -a /etc/newrelic-infra.yml
 sudo curl -o /etc/yum.repos.d/newrelic-infra.repo https://download.newrelic.com/infrastructure_agent/linux/yum/el/7/x86_64/newrelic-infra.repo
 sudo yum -q makecache -y --disablerepo='*' --enablerepo='newrelic-infra'
 sudo yum install newrelic-infra -y --nobest
