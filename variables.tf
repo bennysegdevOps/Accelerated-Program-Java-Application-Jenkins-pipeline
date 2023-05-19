@@ -1,8 +1,3 @@
-# aws region
-variable "region" {
-  default = "eu-west-1"
-}
-
 # vpc cidr block
 variable "vpc_cidr" {
   default = "10.0.0.0/16"
@@ -116,4 +111,54 @@ variable "nr_license_key" {
 # new relic file path
 variable "newrelicfile" {
   default = "/newrelic.yml"
+}
+
+# db identifier
+variable "db_identifier" {
+  default = "petadopt-db"
+}
+
+# db name
+variable "db_name" {
+  default = "petadopt-db"
+}
+
+# db engine
+variable "db_engine" {
+  default = "mysql"
+}
+
+# db engine version
+variable "db_engine_version" {
+  default = "5.7"
+}
+
+# db instance class
+variable "db_instance_class" {
+  default = "db.t3.micro"
+}
+
+# db username
+variable "db_username" {
+  default = "admin"
+}
+
+# db password
+variable "db_password" {
+  default = "Admin123@"
+}
+
+# db parameter group name
+variable "db_parameter_gp_name" {
+  default = "default.mysql5.7"
+}
+
+# db storage type
+variable "db_storage_type" {
+  default = "gp2"
+}
+
+# domain name
+variable "domain_name" {
+  default = "wehabot.com"
 }
