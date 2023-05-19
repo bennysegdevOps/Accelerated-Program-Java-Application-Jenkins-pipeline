@@ -54,7 +54,7 @@ sonar.jdbc.password=Admin123
 sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube
 sonar.search.javaOpts=-Xmx512m -Xms512m -XX:+HeapDumpOnOutOfMemoryError" >> /opt/sonarqube/conf/sonar.properties'
  
- #Configure such that SonarQube starts on boot up
+#Configure such that SonarQube starts on boot up
 sudo touch /etc/systemd/system/sonarqube.service
 #Configuring so that we can run commands to start, stop and reload sonarqube service
 sudo bash -c 'echo "

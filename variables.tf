@@ -112,3 +112,8 @@ variable "private_keypair_path" {
 variable "nr_license_key" {
   default = "c605530d3bdfc50e00542ec7f199be7efebaNRAL"
 }
+
+# new relic file path
+variable "newrelicfile" {
+  default = "/newrelic.yml"
+}
