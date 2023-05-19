@@ -41,11 +41,22 @@ sudo mkdir /opt/docker
 # create Dockerfile to convert artifact to an image
 touch /opt/docker/Dockerfile
 cat <<EOT>> /opt/docker/Dockerfile
-FROM tomcat
 FROM openjdk:8-jre-slim
-COPY *.war app/
-WORKDIR app/
-ENTRYPOINT [ "java", "-jar", "spring-petclinic-1.0.war", "--server.port=8080"]
+FROM ubuntu
+FROM tomcat
+COPY *.war /usr/local/tomcat/webapps
+WORKDIR  /usr/local/tomcat/webapps
+RUN apt update -y && apt install curl -y
+RUN curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
+    apt-get install unzip -y  && \
+    unzip newrelic-java.zip -d  /usr/local/tomcat/webapps
+ENV JAVA_OPTS="$JAVA_OPTS -javaagent:app/newrelic.jar"
+ENV NEW_RELIC_APP_NAME="myapp"
+ENV NEW_RELIC_LOG_FILE_NAME=STDOUT
+ENV NEW_RELIC_LICENCE_KEY="${var.nr_license_key}"
+WORKDIR /usr/local/tomcat/webapps
+ADD ./newrelic.yml /usr/local/tomcat/webapps/newrelic/newrelic.yml
+ENTRYPOINT [ "java", "-javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar", "-jar", "spring-petclinic-1.0.war", "--server.port=8080"]
 EOT
 
 # create yaml file to build docker image
