@@ -123,13 +123,13 @@ cat << EOT > /opt/docker/newrelic.yml
                      --pid=host \\
                      -v "/:/host:ro" \\
                      -v "/var/run/docker.sock:/var/run/docker.sock" \\
-                     -e NRIA_LICENSE_KEY=c605530d3bdfc50e00542ec7f199be7efebaNRAL \\
+                     -e NRIA_LICENSE_KEY=${var.nr_license_key} \\
                      newrelic/infrastructure:latest
 EOT
 
 sudo chown -R ec2-user:ec2-user /opt/docker
 sudo chmod -R 700 /opt/docker
-echo "license_key: c605530d3bdfc50e00542ec7f199be7efebaNRAL" | sudo tee -a /etc/newrelic-infra.yml
+echo "license_key: ${var.nr_license_key}" | sudo tee -a /etc/newrelic-infra.yml
 sudo curl -o /etc/yum.repos.d/newrelic-infra.repo https://download.newrelic.com/infrastructure_agent/linux/yum/el/7/x86_64/newrelic-infra.repo
 sudo yum -q makecache -y --disablerepo='*' --enablerepo='newrelic-infra'
 sudo yum install newrelic-infra -y --nobest

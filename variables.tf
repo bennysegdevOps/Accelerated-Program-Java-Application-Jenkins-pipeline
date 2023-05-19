@@ -107,3 +107,8 @@ variable "keypair_path" {
 variable "private_keypair_path" {
   default = "~/Desktop/keypair/benny"
 }
+
+# new relic license key
+variable "nr_license_key" {
+  default = "c605530d3bdfc50e00542ec7f199be7efebaNRAL"
+}
