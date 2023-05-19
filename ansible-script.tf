@@ -20,8 +20,9 @@ sudo usermod -aG docker ec2-user
 
 # giving right permission to the /etc/ansible directory
 sudo chown -R ec2-user:ec2-user /etc/ansible
-echo "${var.private_keypair_path}" >> /home/ec2-user/benny.pem
-chmod 400 benny.pem
+echo "${file(var.private_keypair_path)}" >> /home/ec2-user/benny
+sudo chown ec2-user:ec2-user /home/ec2-user/benny
+sudo chmod 400 benny /home/ec2-user/benny
 cd /etc/ansible
 touch hosts
 sudo chown ec2-user:ec2-user hosts
@@ -34,11 +35,12 @@ ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyCheckin
 localhost ansible_connection=local
 
 [docker_host]
-${aws_instance.docker-server.public_ip} ansible_user=ec2-user ansible_ssh_private_key_file=/home/ec2-user/benny.pem
+${aws_instance.docker-server.public_ip} ansible_user=ec2-user ansible_ssh_private_key_file=/home/ec2-user/benny
 EOT
-sudo mkdir /opt/docker
 
 # create Dockerfile to convert artifact to an image
+sudo mkdir /opt/docker
+echo "${file(var.newrelicfile)}" >> /opt/docker/newrelic.yml
 touch /opt/docker/Dockerfile
 cat <<EOT>> /opt/docker/Dockerfile
 FROM openjdk:8-jre-slim
@@ -50,7 +52,7 @@ RUN apt update -y && apt install curl -y
 RUN curl -O https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
     apt-get install unzip -y  && \
     unzip newrelic-java.zip -d  /usr/local/tomcat/webapps
-ENV JAVA_OPTS="$JAVA_OPTS -javaagent:app/newrelic.jar"
+ENV JAVA_OPTS="$JAVA_OPTS -javaagent:/usr/local/tomcat/webapps/newrelic/newrelic.jar"
 ENV NEW_RELIC_APP_NAME="myapp"
 ENV NEW_RELIC_LOG_FILE_NAME=STDOUT
 ENV NEW_RELIC_LICENCE_KEY="${var.nr_license_key}"
@@ -118,7 +120,8 @@ cat <<EOT>> /opt/docker/docker-container.yml
 EOT
 
 # Create yaml file to create a newrelic container
-cat << EOT > /opt/docker/newrelic.yml
+touch /opt/docker/newrelic-container.yml
+cat << EOT > /opt/docker/newrelic-container.yml
 ---
  - hosts: docker_host
    become: true
