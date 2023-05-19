@@ -58,21 +58,21 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# elastic ip
-resource "aws_eip" "nat_eip" {
-  vpc                       = true
-  depends_on = [aws_internet_gateway.igw]
-}
+# # elastic ip
+# resource "aws_eip" "nat_eip" {
+#   vpc                       = true
+#   depends_on = [aws_internet_gateway.igw]
+# }
 
-# NAT gateway
-resource "aws_nat_gateway" "natgw" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnet1.id
+# # NAT gateway
+# resource "aws_nat_gateway" "natgw" {
+#   allocation_id = aws_eip.nat_eip.id
+#   subnet_id     = aws_subnet.public_subnet1.id
 
-  tags = {
-    Name = "${local.name}-natgw"
-  }
-}
+#   tags = {
+#     Name = "${local.name}-natgw"
+#   }
+# }
 
 # Public Route Table
 resource "aws_route_table" "public_RT" {
@@ -88,19 +88,19 @@ resource "aws_route_table" "public_RT" {
   }
 }
 
-# Private Route Table
-resource "aws_route_table" "private_RT" {
-  vpc_id = aws_vpc.main.id
+# # Private Route Table
+# resource "aws_route_table" "private_RT" {
+#   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = var.RT_cidr
-    gateway_id = aws_nat_gateway.natgw.id
-  }
+#   route {
+#     cidr_block = var.RT_cidr
+#     gateway_id = aws_nat_gateway.natgw.id
+#   }
 
-  tags = {
-    Name = "${local.name}-private_RT"
-  }
-}
+#   tags = {
+#     Name = "${local.name}-private_RT"
+#   }
+# }
 
 # Public Route Table Association 
 resource "aws_route_table_association" "public_subnet1" {
@@ -113,16 +113,16 @@ resource "aws_route_table_association" "public_subnet2" {
   route_table_id = aws_route_table.public_RT.id
 }
 
-# Private Route Table Association 
-resource "aws_route_table_association" "private_subnet1" {
-  subnet_id      = aws_subnet.private_subnet1.id
-  route_table_id = aws_route_table.private_RT.id
-}
+# # Private Route Table Association 
+# resource "aws_route_table_association" "private_subnet1" {
+#   subnet_id      = aws_subnet.private_subnet1.id
+#   route_table_id = aws_route_table.private_RT.id
+# }
 
-resource "aws_route_table_association" "private_subnet2" {
-  subnet_id      = aws_subnet.private_subnet2.id
-  route_table_id = aws_route_table.private_RT.id
-}
+# resource "aws_route_table_association" "private_subnet2" {
+#   subnet_id      = aws_subnet.private_subnet2.id
+#   route_table_id = aws_route_table.private_RT.id
+# }
 
 # Security Group for Bastion Host and Ansible Server
 resource "aws_security_group" "Bastion-Ansible_SG" {
@@ -268,39 +268,39 @@ resource "aws_security_group" "Sonarqube_SG" {
   }
 }
 
-# Security Group for Nexus Server
-resource "aws_security_group" "Nexus_SG" {
-  name        = "${local.name}-Nexus"
-  description = "Allow inbound traffic"
-  vpc_id      = aws_vpc.main.id
+# # Security Group for Nexus Server
+# resource "aws_security_group" "Nexus_SG" {
+#   name        = "${local.name}-Nexus"
+#   description = "Allow inbound traffic"
+#   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description      = "Allow ssh access"
-    from_port        = var.port_ssh
-    to_port          = var.port_ssh
-    protocol         = "tcp"
-    cidr_blocks      = [var.RT_cidr]
-  }
+#   ingress {
+#     description      = "Allow ssh access"
+#     from_port        = var.port_ssh
+#     to_port          = var.port_ssh
+#     protocol         = "tcp"
+#     cidr_blocks      = [var.RT_cidr]
+#   }
 
-  ingress {
-    description      = "Allow nexus access"
-    from_port        = var.port_proxy_nex
-    to_port          = var.port_proxy_nex
-    protocol         = "tcp"
-    cidr_blocks      = [var.RT_cidr]
-  }
+#   ingress {
+#     description      = "Allow nexus access"
+#     from_port        = var.port_proxy_nex
+#     to_port          = var.port_proxy_nex
+#     protocol         = "tcp"
+#     cidr_blocks      = [var.RT_cidr]
+#   }
 
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = [var.RT_cidr]
-  }
+#   egress {
+#     from_port        = 0
+#     to_port          = 0
+#     protocol         = "-1"
+#     cidr_blocks      = [var.RT_cidr]
+#   }
 
-  tags = {
-    Name = "${local.name}-Nexus-SG"
-  }
-}
+#   tags = {
+#     Name = "${local.name}-Nexus-SG"
+#   }
+# }
 
 # Security Group for MySQL RDS Database
 resource "aws_security_group" "MySQL_RDS_SG" {
@@ -414,47 +414,47 @@ resource "aws_instance" "sonarqube-server" {
   }
 }
 
-# nexus red hat instance 
-resource "aws_instance" "nexus-server" {
-  ami                         = var.ami2 # red hat # eu-west-1
-  instance_type               = var.instance_type
-  key_name                    = aws_key_pair.benny_keypair.id
-  vpc_security_group_ids      = [aws_security_group.Nexus_SG.id]
-  associate_public_ip_address = true
-  subnet_id                   = aws_subnet.public_subnet2.id
+# # nexus red hat instance 
+# resource "aws_instance" "nexus-server" {
+#   ami                         = var.ami2 # red hat # eu-west-1
+#   instance_type               = var.instance_type
+#   key_name                    = aws_key_pair.benny_keypair.id
+#   vpc_security_group_ids      = [aws_security_group.Nexus_SG.id]
+#   associate_public_ip_address = true
+#   subnet_id                   = aws_subnet.public_subnet2.id
   
-  tags = {
-    Name = "${local.name}-nexus-server"
-  }
-}
+#   tags = {
+#     Name = "${local.name}-nexus-server"
+#   }
+# }
 
-# database subnet group
-resource "aws_db_subnet_group" "db-subnet" {
-  name       = "${local.name}-db-subnet-group"
-  subnet_ids = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
+# # database subnet group
+# resource "aws_db_subnet_group" "db-subnet" {
+#   name       = "${local.name}-db-subnet-group"
+#   subnet_ids = [aws_subnet.private_subnet1.id, aws_subnet.private_subnet2.id]
 
-  tags = {
-    Name = "${local.name}-db-subnet-group"
-    }
-}
+#   tags = {
+#     Name = "${local.name}-db-subnet-group"
+#     }
+# }
 
-# MySQL RDS database 
-resource "aws_db_instance" "mysql_db" {
-  identifier                = var.db_identifier
-  db_subnet_group_name      = aws_db_subnet_group.db-subnet.name
-  vpc_security_group_ids    = [aws_security_group.MySQL_RDS_SG.id]
-  publicly_accessible       = false 
-  skip_final_snapshot       = true
-  allocated_storage         = 10
-  db_name                   = var.db_name
-  engine                    = var.db_engine
-  engine_version            = var.db_engine_version
-  instance_class            = var.db_instance_class
-  username                  = var.db_username
-  password                  = var.db_password
-  parameter_group_name      = var.db_parameter_gp_name
-  storage_type              = var.db_storage_type
-}
+# # MySQL RDS database 
+# resource "aws_db_instance" "mysql_db" {
+#   identifier                = var.db_identifier
+#   db_subnet_group_name      = aws_db_subnet_group.db-subnet.name
+#   vpc_security_group_ids    = [aws_security_group.MySQL_RDS_SG.id]
+#   publicly_accessible       = false 
+#   skip_final_snapshot       = true
+#   allocated_storage         = 10
+#   db_name                   = var.db_name
+#   engine                    = var.db_engine
+#   engine_version            = var.db_engine_version
+#   instance_class            = var.db_instance_class
+#   username                  = var.db_username
+#   password                  = var.db_password
+#   parameter_group_name      = var.db_parameter_gp_name
+#   storage_type              = var.db_storage_type
+# }
 
 # Route 53 zone
 resource "aws_route53_zone" "route53_zone" {
@@ -587,11 +587,11 @@ resource "aws_launch_configuration" "launch_config" {
 # Auto Scaling Group
 resource "aws_autoscaling_group" "asg" {
   name                      = "${local.name}-asg"
-  max_size                  = 4
+  max_size                  = 2
   min_size                  = 1
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  desired_capacity          = 3
+  desired_capacity          = 1
   force_delete              = true
   launch_configuration      = aws_launch_configuration.launch_config.id
   vpc_zone_identifier       = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
