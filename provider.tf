@@ -5,5 +5,5 @@ provider "aws" {
 }
 
 locals {
-  name = "benny-pacpjpap-project"
+  name = "benny-pacpjpap"
 }
