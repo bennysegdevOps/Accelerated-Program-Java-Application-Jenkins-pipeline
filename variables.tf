@@ -75,7 +75,7 @@ variable "port_mysql" {
 
 # ubuntu ami
 variable "ami" {
-  default = "ami-00aa9d3df94c6c354"
+  default = "ami-01dd271720c1ba44f"  
 }
 
 # red hat ami
