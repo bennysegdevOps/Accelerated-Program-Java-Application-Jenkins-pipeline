@@ -402,8 +402,8 @@ resource "aws_instance" "jenkins-server" {
 # sonarqube ubuntu instance 
 resource "aws_instance" "sonarqube-server" {
   ami                         = var.ami # ubuntu # eu-west-1
-  instance_type               = var.instance_type
-  key_name                    = aws_key_pair.benny_keypair.id
+  instance_type               = var.instance_type2
+  key_name                    = aws_key_pair.benny_keypair.key_name
   vpc_security_group_ids      = [aws_security_group.Sonarqube_SG.id]
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.public_subnet1.id
