@@ -80,12 +80,17 @@ variable "ami" {
 
 # red hat ami
 variable "ami2" {
-  default = "ami-0b04ce5d876a9ba29"
+  default = "ami-013d87f7217614e10"
 }
 
 # instance type
 variable "instance_type" {
   default = "t2.micro"
+}
+
+# instance type
+variable "instance_type2" {
+  default = "t2.medium"
 }
 
 # key name
