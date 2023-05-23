@@ -417,7 +417,7 @@ resource "aws_instance" "sonarqube-server" {
 # nexus red hat instance 
 resource "aws_instance" "nexus-server" {
   ami                         = var.ami2 # red hat # eu-west-1
-  instance_type               = var.instance_type
+  instance_type               = var.instance_type2
   key_name                    = aws_key_pair.benny_keypair.key_name
   vpc_security_group_ids      = [aws_security_group.Nexus_SG.id]
   associate_public_ip_address = true
