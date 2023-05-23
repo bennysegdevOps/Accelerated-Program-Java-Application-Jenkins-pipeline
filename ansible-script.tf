@@ -2,13 +2,9 @@ locals {
   ansible_user_data = <<-EOF
 #!/bin/bash
 
-# updating and installing wget, ansible, python dependences for ansible
+# updating and installing ansible
 sudo yum update -y
-sudo yum install wget -y
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install epel-release-latest-7.noarch.rpm -y
-sudo yum update -y
-sudo yum install git python python-devel python-pip ansible -y
+sudo dnf install -y ansible-core
 
 # install docker
 sudo yum install -y yum-utils
@@ -70,10 +66,12 @@ cat <<EOT>> /opt/docker/docker-image.yml
 
    tasks:
 
-   - name: login to dockerhub
-     command: docker login -u cloudhight -p CloudHight_Admin123@
+   - name: Download WAR file from Nexus repository
+     get_url:
+       url: http://admin:admin123@${aws_instance.Nexus-server.public_ip}:8081/repository/nexus-repo/Petclinic/spring-petclinic/1.0/spring-petclinic-1.0.war
+       dest: /opt/docker
 
-   - name: Create docker image from Pet Adoption war file
+   - name: create docker image from pet Adoption war file
      command: docker build -t testapp .
      args:
        chdir: /opt/docker
@@ -81,11 +79,11 @@ cat <<EOT>> /opt/docker/docker-image.yml
    - name: Add tag to image
      command: docker tag testapp cloudhight/testapp
 
-   - name: Push image to docker hub
-     command: docker push cloudhight/testapp
+   - name: login to dockerhub
+     command: docker login -u cloudhight -p CloudHight_Admin123@
 
-   - name: Remove docker image from Ansible node
-     command: docker rmi testapp cloudhight/testapp
+   - name: push imageto docker hub
+     command: docker push cloudhight/testapp
      ignore_errors: yes
 EOT
 
