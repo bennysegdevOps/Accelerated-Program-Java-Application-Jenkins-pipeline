@@ -68,7 +68,7 @@ cat <<EOT>> /opt/docker/docker-image.yml
 
    - name: Download WAR file from Nexus repository
      get_url:
-       url: http://admin:admin123@${aws_instance.Nexus-server.public_ip}:8081/repository/nexus-repo/Petclinic/spring-petclinic/1.0/spring-petclinic-1.0.war
+       url: http://admin:admin123@${aws_instance.nexus-server.public_ip}:8081/repository/nexus-repo/Petclinic/spring-petclinic/1.0/spring-petclinic-1.0.war
        dest: /opt/docker
 
    - name: create docker image from pet Adoption war file
