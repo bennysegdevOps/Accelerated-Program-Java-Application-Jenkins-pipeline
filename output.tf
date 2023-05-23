@@ -18,7 +18,12 @@ output "sonarqube_ip" {
   value = aws_instance.sonarqube-server.public_ip
 }
 
-# # nexus server public ip 
-# output "nexus_ip" {
-#   value = aws_instance.nexus-server.public_ip
+# nexus server public ip 
+output "nexus_ip" {
+  value = aws_instance.nexus-server.public_ip
+}
+
+# # ALB dns 
+# output "docker_dns" {
+#   value = aws_lb.alb.dns_name
 # }
