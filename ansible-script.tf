@@ -137,6 +137,7 @@ cat << EOT > /opt/docker/newrelic-container.yml
                      -v "/var/run/docker.sock:/var/run/docker.sock" \\
                      -e NRIA_LICENSE_KEY=${var.nr_license_key} \\
                      newrelic/infrastructure:latest
+     ignore_errors: yes
 EOT
 
 sudo chown -R ec2-user:ec2-user /opt/docker
